@@ -17,7 +17,7 @@ env:
 
 
 params:
-  version: tests-passed
+  version: dungeongg
 
   home: /var/www/discourse
   upload_size: 10m
@@ -86,12 +86,11 @@ run:
       cd: $home
       hook: code
       cmd:
-        - git reset --hard
-        - git clean -f
-        - git remote set-branches --add origin master
-        - git pull
-        - git fetch origin $version
+        - git remote set-branches --add origin dungeongg
+        - git fetch --all
         - git checkout $version
+        - git reset --hard origin/dungeongg
+        - git clean -f
         - mkdir -p tmp/pids
         - mkdir -p tmp/sockets
         - touch tmp/.gitkeep
