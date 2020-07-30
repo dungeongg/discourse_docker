@@ -30,7 +30,7 @@ RUN curl --silent --location https://deb.nodesource.com/setup_10.x | sudo bash -
 RUN apt -y update
 # install these without recommends to avoid pulling in e.g.
 # X11 libraries, mailutils
-RUN apt -y install --no-install-recommends git rsyslog logrotate cron ssh-client
+RUN apt -y install --no-install-recommends git rsyslog logrotate cron ssh-client less
 RUN apt -y install build-essential rsync \
                        libxslt-dev libcurl4-openssl-dev \
                        libssl-dev libyaml-dev libtool \
@@ -65,8 +65,8 @@ RUN mkdir /jemalloc-stable && cd /jemalloc-stable &&\
       cd / && rm -rf /jemalloc-stable
 
 RUN mkdir /jemalloc-new && cd /jemalloc-new &&\
-      wget https://github.com/jemalloc/jemalloc/releases/download/5.2.0/jemalloc-5.2.0.tar.bz2 &&\
-      tar -xjf jemalloc-5.2.0.tar.bz2 && cd jemalloc-5.2.0 && ./configure --prefix=/usr --with-install-suffix=5.1.0 && make build_lib && make install_lib &&\
+      wget https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2 &&\
+      tar -xjf jemalloc-5.2.1.tar.bz2 && cd jemalloc-5.2.1 && ./configure --prefix=/usr --with-install-suffix=5.2.1 && make build_lib && make install_lib &&\
       cd / && rm -rf /jemalloc-new
 
 RUN echo 'gem: --no-document' >> /usr/local/etc/gemrc &&\
@@ -87,7 +87,7 @@ ADD install-imagemagick /tmp/install-imagemagick
 RUN /tmp/install-imagemagick
 
 # Validate install
-RUN ruby -Eutf-8 -e "v = \`convert -version\`; %w{png tiff jpeg freetype}.each { |f| unless v.include?(f); STDERR.puts('no ' + f +  ' support in imagemagick'); exit(-1); end }"
+RUN ruby -Eutf-8 -e "v = \`convert -version\`; %w{png tiff jpeg freetype heic}.each { |f| unless v.include?(f); STDERR.puts('no ' + f +  ' support in imagemagick'); exit(-1); end }"
 
 ADD install-pngcrush /tmp/install-pngcrush
 RUN /tmp/install-pngcrush

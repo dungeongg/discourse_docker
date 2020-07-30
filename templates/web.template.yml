@@ -91,6 +91,8 @@ run:
         - git checkout $version
         - git reset --hard origin/dungeongg
         - git clean -f
+        - mkdir -p tmp
+        - chown discourse:www-data tmp
         - mkdir -p tmp/pids
         - mkdir -p tmp/sockets
         - touch tmp/.gitkeep
@@ -150,6 +152,13 @@ run:
       hook: bundle_exec
       cmd:
         - su discourse -c 'bundle install --deployment --retry 3 --jobs 4 --verbose --without test development'
+
+  - exec:
+      cd: $home
+      cmd:
+        - su discourse -c 'bundle exec rake plugin:pull_compatible_all'
+      raise_on_fail: false
+
   - exec:
       cd: $home
       hook: db_migrate
